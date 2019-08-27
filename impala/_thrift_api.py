@@ -62,16 +62,12 @@ if six.PY2:
 
 if six.PY3:
     # import thriftpy2 code
-    from thriftpy2 import load
-    from thriftpy2.thrift import TClient, TApplicationException
-    # TODO: reenable cython
-    # from thriftpy2.protocol import TBinaryProtocol
-    from thriftpy2.protocol.binary import TBinaryProtocol  # noqa
-    from thriftpy2.transport import TSocket, TTransportException  # noqa
-    # TODO: reenable cython
-    # from thriftpy2.transport import TBufferedTransport
-    from thriftpy2.transport.buffered import TBufferedTransport  # noqa
-    thrift_dir = os.path.join(os.path.dirname(__file__), 'thrift')
+    from thrift.transport.THttpClient import THttpClient
+    from thrift.Thrift import TApplicationException
+    from thrift.transport.TSocket import TSocket
+    from thrift.transport.TTransport import (
+        TBufferedTransport, TTransportException)
+    from thriftpy2.thrift import TClient
 
     # dynamically load the HS2 modules
     ExecStats = load(os.path.join(thrift_dir, 'ExecStats.thrift'),
@@ -153,7 +149,7 @@ def get_http_transport(host, port, http_path, timeout=None, use_ssl=False,
         log.debug('get_http_transport: password=%s', password)
         auth_mechanism = 'PLAIN'  # sasl doesn't know mechanism LDAP
         # Set the BASIC auth header
-        auth = base64.encodestring('%s:%s' % (user, password)).strip('\n')
+        auth = base64.encodestring(('%s:%s' % (user,password)).encode()).decode().replace('\n', '')
         transport.setCustomHeaders({'Authorization': 'Basic %s' % auth})
 
     return transport
