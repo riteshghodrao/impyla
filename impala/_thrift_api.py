@@ -26,7 +26,6 @@ import os
 import six
 import ssl
 import sys
-import load
 
 from impala.util import get_logger_and_init_null
 
