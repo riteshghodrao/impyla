@@ -26,6 +26,7 @@ import os
 import six
 import ssl
 import sys
+import load
 
 from impala.util import get_logger_and_init_null
 
@@ -62,12 +63,15 @@ if six.PY2:
 
 if six.PY3:
     # import thriftpy2 code
+    from thriftpy2 import load
+    from thriftpy2.protocol.binary import TBinaryProtocol
     from thrift.transport.THttpClient import THttpClient
     from thrift.Thrift import TApplicationException
     from thrift.transport.TSocket import TSocket
     from thrift.transport.TTransport import (
         TBufferedTransport, TTransportException)
     from thriftpy2.thrift import TClient
+    thrift_dir = os.path.join(os.path.dirname(__file__), 'thrift')
 
     # dynamically load the HS2 modules
     ExecStats = load(os.path.join(thrift_dir, 'ExecStats.thrift'),
