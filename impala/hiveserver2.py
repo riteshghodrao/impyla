@@ -31,7 +31,7 @@ from impala.interface import Connection, Cursor, _bind_parameters
 from impala.error import (NotSupportedError, OperationalError,
                           ProgrammingError, HiveServer2Error)
 from impala._thrift_api import (
-    get_socket, get_http_transport, get_transport, THttpClient,
+    get_socket, get_http_transport, get_transport,
     TTransportException, TBinaryProtocol, TOpenSessionReq, TFetchResultsReq,
     TCloseSessionReq, TExecuteStatementReq, TGetInfoReq, TGetInfoType, TTypeId,
     TFetchOrientation, TGetResultSetMetadataReq, TStatusCode, TGetColumnsReq,
@@ -1027,9 +1027,10 @@ class ThriftRPC(object):
 
 
 def open_transport(transport):
+    #TODO: assumes that transport is used from thrift package, not thriftpy.thrift
     if six.PY2 and not transport.isOpen():
         transport.open()
-    elif six.PY3 and not transport.is_open():
+    elif six.PY3 and not transport.isOpen():
         transport.open()
 
 
